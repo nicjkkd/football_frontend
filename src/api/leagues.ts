@@ -1,5 +1,6 @@
 import { API_URL } from "../constants";
-export const getLeagues = async (): Promise<any> => {
-  const response = await fetch(`${API_URL}/leagues`);
-  return response.json();
-};
+import { League } from "./generated/zod";
+import axios from "axios";
+
+export const getLeagues = async (): Promise<Array<League>> =>
+  axios.get(`${API_URL}/leagues`).then((response) => response.data);
