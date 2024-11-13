@@ -4,7 +4,9 @@
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
   ],
-  "strict": true,
-  "strictNullChecks": true,
-  "esModuleInterop": true
+  "compilerOptions": {
+    "strict": true,
+    "strictNullChecks": true,
+    "esModuleInterop": true
+  }
 }
