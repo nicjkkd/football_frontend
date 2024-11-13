@@ -2,6 +2,7 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { useQuery } from "react-query";
 import { getPlayers } from "../api/players";
 import { FixedSizeList as List } from "react-window";
+import CreatePlayer from "../components/CreatePlayer";
 
 export const Route = createLazyFileRoute("/players")({
   component: Players,
@@ -29,6 +30,8 @@ function Players() {
       <div className="m-10 text-lg font-medium text-gray-800">
         Hello from Players!
       </div>
+
+      <CreatePlayer />
 
       <div className="flex items-center justify-center bg-gray-50 rounded-lg border border-gray-200 p-4">
         <List
