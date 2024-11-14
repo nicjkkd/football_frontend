@@ -51,7 +51,7 @@ const Input = forwardRef<InputRef, InputProps>(
 
     // Disabled classes
     const disabledClasses = disabled
-      ? "bg-gray-100 cursor-not-allowed text-gray-500"
+      ? "bg-gray-100 cursor-not-allowed text-gray-500 opacity-50"
       : "";
 
     return (

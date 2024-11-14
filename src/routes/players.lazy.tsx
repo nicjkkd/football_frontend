@@ -23,7 +23,7 @@ function Players() {
     return <p>Loading...</p>;
   }
 
-  console.log(query.data);
+  // console.log(query.data);
 
   return (
     <>
