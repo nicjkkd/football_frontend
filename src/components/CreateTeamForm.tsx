@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from "react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Input from "./Input";
 import { postTeam } from "../api/teams";
-import { CreateTeam, CreateTeamSchema } from "../api/schemas/team.schema";
+import { CreateTeam, CreateTeamSchema } from "../api/schemas";
 
 export default function CreateTeamForm() {
   const queryClient = useQueryClient();
