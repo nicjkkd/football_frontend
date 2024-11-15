@@ -4,8 +4,14 @@ import axios from "axios";
 import { API_URL } from "../constants";
 
 export const CreatePlayerSchema = z.object({
-  firstName: z.string().min(2).max(100),
-  lastName: z.string().min(2).max(100),
+  firstName: z
+    .string()
+    .min(2, { message: "Field must contain more than 2 characters" })
+    .max(100, { message: "Field must contain less than 100 characters" }),
+  lastName: z
+    .string()
+    .min(2, { message: "Field must contain more than 2 characters" })
+    .max(100, { message: "Field must contain less than 100 characters" }),
   // position: z
   // .lazy(() => PositionSchema.optional().nullable())
   // .optional()
