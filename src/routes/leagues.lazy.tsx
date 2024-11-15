@@ -2,6 +2,7 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { getLeagues } from "../api/leagues";
 import { useQuery } from "react-query";
 import { FixedSizeList as List } from "react-window";
+import CreateLeague from "../components/CreateLeague";
 
 export const Route = createLazyFileRoute("/leagues")({
   component: Leagues,
@@ -29,6 +30,9 @@ function Leagues() {
       <div className="m-10 text-lg font-medium text-gray-800">
         Hello from Leagues!
       </div>
+
+      <CreateLeague />
+
       <div className="flex items-center justify-center bg-gray-50 rounded-lg border border-gray-200 p-4">
         <List
           className="w-full m-10 border border-gray-200 rounded-md overflow-y-auto"
