@@ -20,18 +20,17 @@ export const CreatePlayerSchema = z.object({
     .transform((val) => (val === "" ? null : val))
     .nullable()
     .optional(),
-  dateBirth: z
+  dateBirth: z.coerce
     .string()
     .transform((val) => (val === "" ? null : new Date(val)))
     .optional()
     .nullable()
-    // .refine(
-    //   (val) => val === null || val === undefined || !isNaN(val.getTime()),
-    //   {
-    //     message: "Invalid date",
-    //   }
-    // ),
-    .pipe(z.coerce.date().nullable().optional()),
+    .refine(
+      (val) => val === null || val === undefined || !isNaN(val.getTime()),
+      {
+        message: "Invalid date",
+      }
+    ),
   playerNumber: z.coerce.number().int().optional().nullable(),
   teamId: z.string().optional().nullable(),
 });
