@@ -8,3 +8,7 @@ export const getTeams = async (): Promise<Array<Team>> =>
 export const postTeam = async (newTeam: CreateTeam) => {
   return axios.post(`${API_URL}/teams`, newTeam);
 };
+
+export const deleteTeam = async (teamId: string): Promise<Team> => {
+  return axios.delete(`${API_URL}/teams/${teamId}`);
+};

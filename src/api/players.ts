@@ -8,3 +8,7 @@ export const getPlayers = async (): Promise<Array<Player>> =>
 export const postPlayer = async (newPlayer: CreatePlayer) => {
   return axios.post(`${API_URL}/players`, newPlayer);
 };
+
+export const deletePlayer = async (playerId: string): Promise<Player> => {
+  return axios.delete(`${API_URL}/players/${playerId}`);
+};

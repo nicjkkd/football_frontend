@@ -8,3 +8,7 @@ export const getLeagues = async (): Promise<Array<League>> =>
 export const postLeague = async (newLeague: FinalCreateLeague) => {
   return axios.post(`${API_URL}/leagues`, newLeague);
 };
+
+export const deleteLeague = async (leagueId: string): Promise<League> => {
+  return axios.delete(`${API_URL}/leagues/${leagueId}`);
+};
