@@ -1,6 +1,6 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { getTeams } from "../api/teams";
-import { useQuery } from "react-query";
+import { getTeams, deleteTeam } from "../api/teams";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { FixedSizeList as List } from "react-window";
 import CreateTeam from "../components/CreateTeam";
 
@@ -33,24 +33,74 @@ function Teams() {
 
       <CreateTeam />
 
-      <div className="flex items-center justify-center bg-gray-50 rounded-lg border border-gray-200 p-4">
-        <List
-          className="w-full m-10 border border-gray-200 rounded-md overflow-y-auto"
-          height={200}
-          width="100%"
-          itemCount={query.data?.length || 0}
-          itemData={query.data}
-          itemSize={50}
-        >
-          {Row}
-        </List>
+      <div className="m-5">
+        <div className="overflow-x-auto w-full">
+          <table
+            className="min-w-full table-auto border-collapse border border-gray-300"
+            aria-label="Players Table"
+          >
+            <thead>
+              <tr className="bg-gray-100 text-sm font-semibold text-gray-700">
+                <th className="px-4 py-2 border-b">Team Name</th>
+                <th className="px-4 py-2 border-b">City</th>
+                <th className="px-4 py-2 border-b">Date of creation</th>
+              </tr>
+            </thead>
+          </table>
+
+          <div className="flex items-center justify-center bg-gray-50 rounded-lg border border-gray-200 p-4 ">
+            <List
+              className="w-full"
+              height={500}
+              width="100%"
+              itemCount={query.data?.length || 0}
+              itemData={query.data}
+              itemSize={50}
+            >
+              {Row}
+            </List>
+          </div>
+        </div>
       </div>
     </>
   );
 }
 
-const Row = ({ index, style, data }: any) => (
-  <div style={style}>
-    <p className="">{data[index].teamName}</p>
-  </div>
-);
+const Row = ({ index, style, data }: any) => {
+  const team = data[index];
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: deleteTeam,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["teams"] });
+      console.log(`Deleted:`, data);
+    },
+  });
+
+  const handleClick = (teamId: string) => {
+    mutate(teamId);
+  };
+
+  return (
+    <div
+      style={style}
+      className={`flex justify-between p-2 text-sm ${
+        index % 2 === 0 ? "bg-white" : "bg-gray-50"
+      }`}
+    >
+      <div className="w-1/5 px-4 py-2">{team.teamName}</div>
+      <div className="w-1/5 px-4 py-2">{team.city}</div>
+      <div className="w-1/5 px-4 py-2">{team.since}</div>
+      <button
+        className="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300 transition-all"
+        title="Delete Player"
+        onClick={() => {
+          handleClick(team.id);
+        }}
+      >
+        X
+      </button>
+    </div>
+  );
+};
