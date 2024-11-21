@@ -1,8 +1,20 @@
-import { memo, useCallback, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import CreateTeamForm from "./CreateTeamForm";
 
 const CreateTeam = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isSubmitSuccessfull, setIsSubmitSuccessfull] =
+    useState<boolean>(false);
+
+  useEffect(() => {
+    if (isOpen) setIsSubmitSuccessfull(false);
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (isSubmitSuccessfull) {
+      setTimeout(() => setIsSubmitSuccessfull(false), 3000);
+    }
+  }, [isSubmitSuccessfull]);
 
   const handleClick = useCallback(() => {
     setIsOpen((prevState) => !prevState);
@@ -10,7 +22,7 @@ const CreateTeam = () => {
 
   return (
     <>
-      <div className="w-full flex justify-end">
+      <div className="w-full flex justify-center">
         <button
           type="button"
           onClick={handleClick}
@@ -19,7 +31,17 @@ const CreateTeam = () => {
           {isOpen ? "Close Form" : "Add Team"}
         </button>
       </div>
-      {isOpen ? <CreateTeamForm /> : null}
+      {isSubmitSuccessfull ? (
+        <div className="text-green-800 bg-green-100 border border-green-200 p-3 rounded-md text-center">
+          Team was successfully created!
+        </div>
+      ) : null}
+      {isOpen ? (
+        <CreateTeamForm
+          setIsOpen={setIsOpen}
+          setIsSubmitSuccessfull={setIsSubmitSuccessfull}
+        />
+      ) : null}
     </>
   );
 };
