@@ -13,8 +13,8 @@ export const CreateTeamSchema = z.object({
   since: z.coerce
     .number()
     .int()
-    .min(1000, { message: "Year must be greater than 1170" })
-    .max(3000, { message: "Year must be lees than 3000" }),
+    .min(1000, { message: "Year must be greater than 1000" })
+    .max(3000, { message: "Year must be less than 3000" }),
 });
 
 export type CreateTeam = z.infer<typeof CreateTeamSchema>;

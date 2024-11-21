@@ -13,7 +13,7 @@ export const CreateLeagueSchema = z.object({
     .string()
     .min(2, { message: "Field must contain more than 2 characters" })
     .max(100, { message: "Field must contain less than 100 characters" }),
-  teamIdToAdd: z.coerce
+  teamIdToAdd: z
     .string()
     .min(2, { message: "Field must contain more than 2 characters" })
     .max(100, { message: "Field must contain less than 100 characters" })

@@ -10,11 +10,6 @@ export const CreatePlayerSchema = z.object({
     .string()
     .min(2, { message: "Field must contain more than 2 characters" })
     .max(100, { message: "Field must contain less than 100 characters" }),
-  // position: z
-  // .lazy(() => PositionSchema.optional().nullable())
-  // .optional()
-  // .nullable(),
-  // dateBirth: z.coerce.date().optional().nullable(),
   position: z
     .union([PositionSchema, z.literal("")])
     .transform((val) => (val === "" ? null : val))
