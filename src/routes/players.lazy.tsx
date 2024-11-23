@@ -54,10 +54,6 @@ function Players() {
 
   return (
     <>
-      <div className="m-10 text-lg font-medium text-gray-800">
-        Hello from Players!
-      </div>
-
       <CreatePlayer />
 
       <div className="m-5">

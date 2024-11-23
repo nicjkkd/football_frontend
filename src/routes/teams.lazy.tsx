@@ -28,10 +28,6 @@ function Teams() {
 
   return (
     <>
-      <div className="m-10 text-lg font-medium text-gray-800">
-        Hello from Teams!
-      </div>
-
       <CreateTeam />
 
       <div className="m-5">

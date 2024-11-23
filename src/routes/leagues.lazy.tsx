@@ -28,10 +28,6 @@ function Leagues() {
 
   return (
     <>
-      <div className="m-10 text-lg font-medium text-gray-800">
-        Hello from Leagues!
-      </div>
-
       <CreateLeague />
 
       <div className="m-5">
