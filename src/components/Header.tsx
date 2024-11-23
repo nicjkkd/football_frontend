@@ -7,20 +7,16 @@ const Header = () => {
     <header className="bg-white">
       <nav
         aria-label="Global"
-        className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
+        className="mx-auto flex max-w-7xl items-center justify-between p-2 px-14"
       >
-        <div className="flex lg:flex-1">
+        <div className="flex-1">
           <Link to="/" className="-m-1.5 p-1.5">
-            <span className="sr-only">Your Company</span>
-            <img
-              alt=""
-              src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=600"
-              className="h-8 w-auto"
-            />
+            {/* <span className="sr-only">Your Company</span> */}
+            <img alt="" src="/house-chimney.png" className="h-8 w-auto" />
           </Link>
         </div>
-        <div className="flex lg:hidden"></div>
-        <PopoverGroup className="hidden lg:flex lg:gap-x-12">
+        <div className="flex"></div>
+        <PopoverGroup className="flex gap-x-12">
           <Link to="/players" className="text-sm/6 font-semibold text-gray-900">
             Players
           </Link>
@@ -31,11 +27,11 @@ const Header = () => {
             Leagues
           </Link>
         </PopoverGroup>
-        <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+        {/* <div className="flex flex-1 justify-end">
           <a href="#" className="text-sm/6 font-semibold text-gray-900">
             Log in <span aria-hidden="true">&rarr;</span>
           </a>
-        </div>
+        </div> */}
       </nav>
     </header>
   );
