@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -7,6 +7,7 @@ import { postLeague } from "../api/leagues";
 import {
   CreateLeague,
   CreateLeagueSchema,
+  ErrorZodResponse,
   FinalCreateLeagueSchema,
 } from "../api/schemas";
 
@@ -21,7 +22,11 @@ export default function CreateLeagueForm({
 }: Props) {
   const queryClient = useQueryClient();
 
-  const { mutate, isLoading, isError, error } = useMutation({
+  const [errorMessage, setErrorMessage] = useState<string>(
+    "Error with processing request"
+  );
+
+  const { mutate, isLoading, isError } = useMutation({
     mutationFn: postLeague,
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["leagues"] });
@@ -29,11 +34,16 @@ export default function CreateLeagueForm({
       setIsSubmitSuccessfull(true);
       setIsOpen(false);
     },
+    onError: (error: ErrorZodResponse) => {
+      const errorData =
+        error?.response?.data?.msg || "Error with processing request";
+      setErrorMessage(errorData);
+    },
   });
 
-  const errorMessage =
-    // @ts-ignore
-    error?.response?.data?.msg || "Error with processing request";
+  // const errorMessage =
+  //   // @ts-ignore
+  //   error?.response?.data?.msg || "Error with processing request";
 
   const {
     register,

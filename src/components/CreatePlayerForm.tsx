@@ -1,10 +1,14 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Input from "./Input";
 import { postPlayer } from "../api/players";
-import { CreatePlayerSchema, CreatePlayer } from "../api/schemas";
+import {
+  CreatePlayerSchema,
+  CreatePlayer,
+  ErrorZodResponse,
+} from "../api/schemas";
 
 interface Props {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -17,7 +21,11 @@ export default function CreatePlayerForm({
 }: Props) {
   const queryClient = useQueryClient();
 
-  const { mutate, isLoading, isError, error } = useMutation({
+  const [errorMessage, setErrorMessage] = useState<string>(
+    "Error with processing request"
+  );
+
+  const { mutate, isLoading, isError } = useMutation({
     mutationFn: postPlayer,
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["players"] });
@@ -25,11 +33,16 @@ export default function CreatePlayerForm({
       setIsSubmitSuccessfull(true);
       setIsOpen(false);
     },
+    onError: (error: ErrorZodResponse) => {
+      const errorData =
+        error?.response?.data?.msg || "Error with processing request";
+      setErrorMessage(errorData);
+    },
   });
 
-  const errorMessage =
-    // @ts-ignore
-    error?.response?.data?.msg || "Error with processing request";
+  // const errorMessage =
+  //   // @ts-ignore
+  //   error?.response?.data?.msg || "Error with processing request";
 
   const {
     register,

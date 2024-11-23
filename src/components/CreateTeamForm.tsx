@@ -1,10 +1,10 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Input from "./Input";
 import { postTeam } from "../api/teams";
-import { CreateTeam, CreateTeamSchema } from "../api/schemas";
+import { CreateTeam, CreateTeamSchema, ErrorZodResponse } from "../api/schemas";
 
 interface Props {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -17,7 +17,11 @@ export default function CreateTeamForm({
 }: Props) {
   const queryClient = useQueryClient();
 
-  const { mutate, isLoading, isError, error } = useMutation({
+  const [errorMessage, setErrorMessage] = useState<string>(
+    "Error with processing request"
+  );
+
+  const { mutate, isLoading, isError } = useMutation({
     mutationFn: postTeam,
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["teams"] });
@@ -25,11 +29,16 @@ export default function CreateTeamForm({
       setIsSubmitSuccessfull(true);
       setIsOpen(false);
     },
+    onError: (error: ErrorZodResponse) => {
+      const errorData =
+        error?.response?.data?.msg || "Error with processing request";
+      setErrorMessage(errorData);
+    },
   });
 
-  const errorMessage =
-    // @ts-ignore
-    error?.response?.data?.msg || "Error with processing request";
+  // const errorMessage =
+  //   // @ts-ignore
+  //   error?.response?.data?.msg || "Error with processing request";
 
   const {
     register,
