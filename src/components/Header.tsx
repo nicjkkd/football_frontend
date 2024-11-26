@@ -11,7 +11,6 @@ const Header = () => {
       >
         <div className="flex-1">
           <Link to="/" className="-m-1.5 p-1.5">
-            {/* <span className="sr-only">Your Company</span> */}
             <img alt="" src="/house-chimney.png" className="h-8 w-auto" />
           </Link>
         </div>
@@ -27,11 +26,6 @@ const Header = () => {
             Leagues
           </Link>
         </PopoverGroup>
-        {/* <div className="flex flex-1 justify-end">
-          <a href="#" className="text-sm/6 font-semibold text-gray-900">
-            Log in <span aria-hidden="true">&rarr;</span>
-          </a>
-        </div> */}
       </nav>
     </header>
   );
