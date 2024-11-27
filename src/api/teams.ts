@@ -5,7 +5,7 @@ import { CreateTeam, Team } from "./schemas";
 export const getTeams = async (): Promise<Array<Team>> =>
   axios.get(`${API_URL}/teams`).then((response) => response.data);
 
-export const postTeam = async (newTeam: CreateTeam) => {
+export const postTeam = async (newTeam: CreateTeam): Promise<Team> => {
   return axios.post(`${API_URL}/teams`, newTeam);
 };
 

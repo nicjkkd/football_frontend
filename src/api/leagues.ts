@@ -5,7 +5,9 @@ import axios from "axios";
 export const getLeagues = async (): Promise<Array<League>> =>
   axios.get(`${API_URL}/leagues`).then((response) => response.data);
 
-export const postLeague = async (newLeague: FinalCreateLeague) => {
+export const postLeague = async (
+  newLeague: FinalCreateLeague
+): Promise<League> => {
   return axios.post(`${API_URL}/leagues`, newLeague);
 };
 

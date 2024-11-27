@@ -5,7 +5,7 @@ import { CreatePlayer, Player } from "./schemas";
 export const getPlayers = async (): Promise<Array<Player>> =>
   axios.get(`${API_URL}/players`).then((response) => response.data);
 
-export const postPlayer = async (newPlayer: CreatePlayer) => {
+export const postPlayer = async (newPlayer: CreatePlayer): Promise<Player> => {
   return axios.post(`${API_URL}/players`, newPlayer);
 };
 
