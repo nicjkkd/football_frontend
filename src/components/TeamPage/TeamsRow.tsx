@@ -1,27 +1,27 @@
 import { memo } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { deleteLeague } from "../api/leagues";
-import { League } from "../api/schemas";
 import { ListChildComponentProps } from "react-window";
+import { Team } from "../../api/schemas";
+import { deleteTeam } from "../../api/teams";
 
-const LeaguesRow: React.FC<ListChildComponentProps<League[]>> = ({
+const TeamsRow: React.FC<ListChildComponentProps<Team[]>> = ({
   index,
   style,
   data,
 }) => {
-  const league = data[index];
+  const team = data[index];
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
-    mutationFn: deleteLeague,
+    mutationFn: deleteTeam,
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["leagues"] });
+      queryClient.invalidateQueries({ queryKey: ["teams"] });
       console.log(`Deleted:`, data);
     },
   });
 
-  const handleClick = (leagueId: string) => {
-    mutate(leagueId);
+  const handleClick = (teamId: string) => {
+    mutate(teamId);
   };
 
   return (
@@ -31,12 +31,14 @@ const LeaguesRow: React.FC<ListChildComponentProps<League[]>> = ({
         index % 2 === 0 ? "bg-white" : "bg-gray-50"
       }`}
     >
-      <div className="w-1/5 px-4 py-2">{league.leagueName}</div>
+      <div className="w-1/5 px-4 py-2">{team.teamName}</div>
+      <div className="w-1/5 px-4 py-2">{team.city}</div>
+      <div className="w-1/5 px-4 py-2">{team.since}</div>
       <button
         className="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300 transition-all"
         title="Delete Player"
         onClick={() => {
-          handleClick(league.id);
+          handleClick(team.id);
         }}
       >
         X
@@ -45,4 +47,4 @@ const LeaguesRow: React.FC<ListChildComponentProps<League[]>> = ({
   );
 };
 
-export default memo(LeaguesRow);
+export default memo(TeamsRow);

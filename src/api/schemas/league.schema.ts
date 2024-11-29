@@ -6,6 +6,11 @@ import { z } from "zod";
 //     .string()
 //     .min(2, { message: "Field must contain more than 2 characters" })
 //     .max(100, { message: "Field must contain less than 100 characters" }),
+//   teamIdToAdd: z
+//     .string()
+//     .min(2, { message: "Field must contain more than 2 characters" })
+//     .max(100, { message: "Field must contain less than 100 characters" })
+//     .optional(),
 // });
 
 export const CreateLeagueSchema = z.object({
@@ -14,9 +19,11 @@ export const CreateLeagueSchema = z.object({
     .min(2, { message: "Field must contain more than 2 characters" })
     .max(100, { message: "Field must contain less than 100 characters" }),
   teamIdToAdd: z
-    .string()
-    .min(2, { message: "Field must contain more than 2 characters" })
-    .max(100, { message: "Field must contain less than 100 characters" })
+    .array(
+      z
+        .string()
+        .min(2, { message: "Each team ID must be at least 2 characters long" })
+    )
     .optional(),
 });
 
@@ -30,3 +37,5 @@ export const FinalCreateLeagueSchema = z.object({
 export type FinalCreateLeague = z.infer<typeof FinalCreateLeagueSchema>;
 
 export type { League };
+
+// export type ServerCreateLeagueResponseWithQueryParams = Team[] & League;

@@ -1,18 +1,27 @@
-import { Dispatch, SetStateAction, useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { useMutation, useQueryClient } from "react-query";
+import { Dispatch, SetStateAction, useMemo } from "react";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import Select from "react-select";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Input from "./Input";
-import { postPlayer } from "../api/players";
+import { AxiosError } from "axios";
+import Input from "../Input";
 import {
   CreatePlayerSchema,
   CreatePlayer,
   ErrorZodResponse,
-} from "../api/schemas";
+  Player,
+} from "../../api/schemas";
+import { postPlayer } from "../../api/players";
+import { getTeams } from "../../api/teams";
 
 interface Props {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setIsSubmitSuccessfull: Dispatch<SetStateAction<boolean>>;
+}
+
+interface SelectOptionsType {
+  value: string;
+  label: string;
 }
 
 export default function CreatePlayerForm({
@@ -21,38 +30,49 @@ export default function CreatePlayerForm({
 }: Props) {
   const queryClient = useQueryClient();
 
-  const [errorMessage, setErrorMessage] = useState<string>(
-    "Error with processing request"
-  );
+  const teamsQuery = useQuery({
+    queryKey: ["teams"],
+    queryFn: getTeams,
+    refetchOnMount: false,
+  });
 
-  const { mutate, isLoading, isError } = useMutation({
+  const teamOptions = useMemo<SelectOptionsType[]>(() => {
+    const teamOptionsArray =
+      teamsQuery.data?.map((team) => ({
+        value: team.id,
+        label: team.teamName,
+      })) || [];
+    return teamOptionsArray;
+  }, [teamsQuery.data]);
+
+  const { mutate, isLoading, isError, error } = useMutation<
+    Player,
+    AxiosError<ErrorZodResponse>,
+    CreatePlayer
+  >({
     mutationFn: postPlayer,
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["players"] });
-      console.log(data);
       setIsSubmitSuccessfull(true);
       setIsOpen(false);
     },
-    onError: (error: ErrorZodResponse) => {
-      const errorData =
-        error?.response?.data?.msg || "Error with processing request";
-      setErrorMessage(errorData);
-    },
   });
 
-  // const errorMessage =
-  //   // @ts-ignore
-  //   error?.response?.data?.msg || "Error with processing request";
+  const errorMessage =
+    // @ts-ignore
+    error?.response?.data?.msg || "Error with processing request";
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    control,
   } = useForm<CreatePlayer>({
     resolver: zodResolver(CreatePlayerSchema),
   });
 
   const onSubmit: SubmitHandler<CreatePlayer> = (data) => {
+    console.log(data);
     let initialData = { ...data };
 
     if (!data.teamId && !data.playerNumber) {
@@ -115,11 +135,31 @@ export default function CreatePlayerForm({
           {...register("playerNumber")}
           error={errors.playerNumber?.message}
         ></Input>
+
+        {/* 
         <Input
           placeholder="Player's team id"
           {...register("teamId")}
           error={errors.teamId?.message}
-        ></Input>
+        ></Input> */}
+
+        <Controller
+          control={control}
+          name="teamId"
+          render={({ field: { value, onChange } }) => (
+            <Select
+              options={teamOptions}
+              value={teamOptions.find(
+                (teamOption) => teamOption.value === value
+              )}
+              onChange={(chosenTeam) => {
+                console.log(chosenTeam);
+                return onChange(chosenTeam?.value);
+              }}
+            />
+          )}
+        />
+
         <button
           type="submit"
           className="w-full py-2 bg-gray-800 text-white rounded-md transition hover:bg-gray-700 cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed disabled:text-gray-200"

@@ -3,9 +3,9 @@ export * from "./team.schema";
 export * from "./league.schema";
 
 export interface ErrorZodResponse {
-  response: {
-    data: {
-      msg: string;
+  response?: {
+    data?: {
+      msg?: string;
     };
   };
 }

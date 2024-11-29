@@ -2,11 +2,11 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { useQuery } from "react-query";
 import { getPlayers } from "../api/players";
 import { FixedSizeList as List } from "react-window";
-import CreatePlayer from "../components/CreatePlayer";
+import CreatePlayer from "../components/PlayerPage/CreatePlayer";
 import { getTeams } from "../api/teams";
 import { useMemo } from "react";
 import { Team } from "../api/schemas";
-import PlayersRow from "../components/PlayersRow";
+import PlayersRow from "../components/PlayerPage/PlayersRow";
 
 export const Route = createLazyFileRoute("/players")({
   component: Players,

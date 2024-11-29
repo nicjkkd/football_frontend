@@ -1,8 +1,8 @@
-import { useMutation, useQueryClient } from "react-query";
-import { deletePlayer } from "../api/players";
 import { memo, useMemo } from "react";
+import { useMutation, useQueryClient } from "react-query";
 import { ListChildComponentProps } from "react-window";
-import { Player } from "../api/schemas";
+import { Player } from "../../api/schemas";
+import { deletePlayer } from "../../api/players";
 
 type PlayerWithTeamName = Player & { playerTeamName: string | undefined };
 
