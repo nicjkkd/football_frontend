@@ -146,12 +146,9 @@ export default function CreatePlayerForm({
         <Controller
           control={control}
           name="teamId"
-          render={({ field: { value, onChange } }) => (
+          render={({ field: { onChange } }) => (
             <Select
               options={teamOptions}
-              value={teamOptions.find(
-                (teamOption) => teamOption.value === value
-              )}
               onChange={(chosenTeam) => {
                 console.log(chosenTeam);
                 return onChange(chosenTeam?.value);
