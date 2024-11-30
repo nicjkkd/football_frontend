@@ -65,6 +65,7 @@ export default function CreatePlayerForm({
     handleSubmit,
     formState: { errors },
     control,
+    reset,
   } = useForm<CreatePlayer>({
     resolver: zodResolver(CreatePlayerSchema),
   });
@@ -91,6 +92,10 @@ export default function CreatePlayerForm({
 
     const validatedPlayer = CreatePlayerSchema.parse(initialData);
     mutate(validatedPlayer);
+  };
+
+  const handleReset = () => {
+    reset();
   };
 
   return (
@@ -134,9 +139,12 @@ export default function CreatePlayerForm({
         <Controller
           control={control}
           name="teamId"
-          render={({ field: { onChange } }) => (
+          render={({ field: { onChange, value } }) => (
             <Select
               options={teamOptions}
+              value={teamOptions.filter(
+                (teamOption) => teamOption.value === value
+              )}
               onChange={(chosenTeam) => {
                 console.log(chosenTeam);
                 return onChange(chosenTeam?.value);
@@ -151,6 +159,13 @@ export default function CreatePlayerForm({
           disabled={isLoading}
         >
           Submit
+        </button>
+        <button
+          type="button"
+          className="w-full py-2 bg-gray-800 text-white rounded-md transition hover:bg-gray-700 cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed disabled:text-gray-200"
+          onClick={handleReset}
+        >
+          Reset Form
         </button>
       </form>
     </>

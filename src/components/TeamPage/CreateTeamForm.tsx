@@ -42,6 +42,7 @@ export default function CreateTeamForm({
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<CreateTeam>({
     resolver: zodResolver(CreateTeamSchema),
   });
@@ -50,6 +51,10 @@ export default function CreateTeamForm({
     let initialData = { ...data };
     const validatedTeam = CreateTeamSchema.parse(initialData);
     mutate(validatedTeam);
+  };
+
+  const handleReset = () => {
+    reset();
   };
 
   return (
@@ -84,6 +89,13 @@ export default function CreateTeamForm({
           disabled={isLoading}
         >
           Submit
+        </button>
+        <button
+          type="button"
+          className="w-full py-2 bg-gray-800 text-white rounded-md transition hover:bg-gray-700 cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed disabled:text-gray-200"
+          onClick={handleReset}
+        >
+          Reset Form
         </button>
       </form>
     </>
