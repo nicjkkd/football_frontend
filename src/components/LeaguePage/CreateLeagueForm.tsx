@@ -74,25 +74,6 @@ export default function CreateLeagueForm({
   });
 
   const onSubmit: SubmitHandler<CreateLeague> = (data) => {
-    // const teamsIdArray: Array<string> = [];
-    // const initialData = { ...data };
-
-    // const validatedLeague = CreateLeagueSchema.parse(initialData);
-
-    // if (validatedLeague.teamIdToAdd) {
-    //   teamsIdArray.push(validatedLeague.teamIdToAdd);
-    // }
-
-    // const postData = {
-    //   league: {
-    //     leagueName: validatedLeague.leagueName,
-    //   },
-    //   teamsIdToAdd: teamsIdArray,
-    // };
-
-    // const finalLeagueValidation = FinalCreateLeagueSchema.parse(postData);
-
-    // mutate(finalLeagueValidation);
     const validatedLeague = CreateLeagueSchema.parse(data);
 
     const teamsIdArray: Array<string> = validatedLeague.teamIdToAdd || [];
@@ -128,12 +109,6 @@ export default function CreateLeagueForm({
           {...register("leagueName")}
           error={errors.leagueName?.message}
         ></Input>
-        {/* <Input
-          placeholder="You can add your first team to this league there"
-          {...register("teamIdToAdd")}
-          error={errors.teamIdToAdd?.message}
-        ></Input> */}
-
         <Controller
           control={control}
           name="teamIdToAdd"

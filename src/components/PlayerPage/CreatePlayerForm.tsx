@@ -91,9 +91,6 @@ export default function CreatePlayerForm({
 
     const validatedPlayer = CreatePlayerSchema.parse(initialData);
     mutate(validatedPlayer);
-
-    // const validatedPlayer = CreatePlayerSchema.parse(data);
-    // mutate(validatedPlayer);
   };
 
   return (
@@ -133,13 +130,6 @@ export default function CreatePlayerForm({
           {...register("playerNumber")}
           error={errors.playerNumber?.message}
         ></Input>
-
-        {/* 
-        <Input
-          placeholder="Player's team id"
-          {...register("teamId")}
-          error={errors.teamId?.message}
-        ></Input> */}
 
         <Controller
           control={control}

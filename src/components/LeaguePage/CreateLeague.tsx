@@ -12,7 +12,7 @@ const CreateLeague = () => {
 
   useEffect(() => {
     if (isSubmitSuccessfull) {
-      setTimeout(() => setIsSubmitSuccessfull(false), 30000);
+      setTimeout(() => setIsSubmitSuccessfull(false), 3000);
     }
   }, [isSubmitSuccessfull]);
 

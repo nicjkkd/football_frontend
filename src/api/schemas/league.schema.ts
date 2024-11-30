@@ -1,18 +1,6 @@
 import { League, Team } from "../generated/zod";
 import { z } from "zod";
 
-// export const CreateLeagueSchema = z.object({
-//   leagueName: z
-//     .string()
-//     .min(2, { message: "Field must contain more than 2 characters" })
-//     .max(100, { message: "Field must contain less than 100 characters" }),
-//   teamIdToAdd: z
-//     .string()
-//     .min(2, { message: "Field must contain more than 2 characters" })
-//     .max(100, { message: "Field must contain less than 100 characters" })
-//     .optional(),
-// });
-
 export const CreateLeagueSchema = z.object({
   leagueName: z
     .string()
