@@ -3,7 +3,6 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import Select from "react-select";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AxiosError } from "axios";
 import Input from "../Input";
 import {
   CreatePlayerSchema,
@@ -47,7 +46,7 @@ export default function CreatePlayerForm({
 
   const { mutate, isLoading, isError, error } = useMutation<
     Player,
-    AxiosError<ErrorZodResponse>,
+    ErrorZodResponse,
     CreatePlayer
   >({
     mutationFn: postPlayer,
@@ -59,7 +58,6 @@ export default function CreatePlayerForm({
   });
 
   const errorMessage =
-    // @ts-ignore
     error?.response?.data?.msg || "Error with processing request";
 
   const {
@@ -88,7 +86,7 @@ export default function CreatePlayerForm({
     }
 
     if (!data.dateBirth) {
-      initialData.dateBirth = null;
+      initialData.dateBirth = undefined;
     }
 
     const validatedPlayer = CreatePlayerSchema.parse(initialData);

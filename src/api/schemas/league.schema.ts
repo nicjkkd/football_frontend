@@ -1,4 +1,4 @@
-import { League } from "../generated/zod";
+import { League, Team } from "../generated/zod";
 import { z } from "zod";
 
 // export const CreateLeagueSchema = z.object({
@@ -38,4 +38,4 @@ export type FinalCreateLeague = z.infer<typeof FinalCreateLeagueSchema>;
 
 export type { League };
 
-// export type ServerCreateLeagueResponseWithQueryParams = Team[] & League;
+export type ServerCreateLeagueResponseWithQueryParams = Team[] & League;

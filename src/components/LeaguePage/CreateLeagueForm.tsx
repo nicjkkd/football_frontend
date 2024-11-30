@@ -3,7 +3,6 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import Select from "react-select";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AxiosError } from "axios";
 import Input from "../Input";
 import {
   CreateLeague,
@@ -12,6 +11,7 @@ import {
   FinalCreateLeague,
   FinalCreateLeagueSchema,
   League,
+  ServerCreateLeagueResponseWithQueryParams,
 } from "../../api/schemas";
 import { postLeague } from "../../api/leagues";
 import { getTeams } from "../../api/teams";
@@ -48,8 +48,8 @@ export default function CreateLeagueForm({
   }, [teamsQuery.data]);
 
   const { mutate, isLoading, isError, error } = useMutation<
-    League,
-    AxiosError<ErrorZodResponse>,
+    League | ServerCreateLeagueResponseWithQueryParams,
+    ErrorZodResponse,
     FinalCreateLeague
   >({
     mutationFn: postLeague,
@@ -61,7 +61,6 @@ export default function CreateLeagueForm({
   });
 
   const errorMessage =
-    // @ts-ignore
     error?.response?.data?.msg || "Error with processing request";
 
   const {
@@ -69,6 +68,7 @@ export default function CreateLeagueForm({
     handleSubmit,
     formState: { errors },
     control,
+    reset,
   } = useForm<CreateLeague>({
     resolver: zodResolver(CreateLeagueSchema),
   });
@@ -108,6 +108,10 @@ export default function CreateLeagueForm({
     mutate(finalLeagueValidation);
   };
 
+  const handleReset = () => {
+    reset();
+  };
+
   return (
     <>
       {isError && (
@@ -133,19 +137,24 @@ export default function CreateLeagueForm({
         <Controller
           control={control}
           name="teamIdToAdd"
-          render={({ field: { onChange } }) => (
-            <Select
-              isMulti
-              options={teamOptions}
-              onChange={(chosenTeamArr) => {
-                console.log(chosenTeamArr);
-                const chosenTeamIds = chosenTeamArr?.map(
-                  (chosenTeamOption) => chosenTeamOption.value
-                );
-                return onChange(chosenTeamIds);
-              }}
-            />
-          )}
+          render={({ field: { onChange, value } }) => {
+            console.log(value);
+            return (
+              <Select
+                isMulti
+                options={teamOptions}
+                value={teamOptions.filter((option) =>
+                  value?.includes(option.value)
+                )}
+                onChange={(chosenTeamArr) => {
+                  const chosenTeamIds = chosenTeamArr?.map(
+                    (chosenTeamOption) => chosenTeamOption.value
+                  );
+                  return onChange(chosenTeamIds);
+                }}
+              />
+            );
+          }}
         />
 
         <button
@@ -154,6 +163,14 @@ export default function CreateLeagueForm({
           disabled={isLoading}
         >
           Submit
+        </button>
+
+        <button
+          type="button"
+          className="w-full py-2 bg-gray-800 text-white rounded-md transition hover:bg-gray-700 cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed disabled:text-gray-200"
+          onClick={handleReset}
+        >
+          Reset Form
         </button>
       </form>
     </>

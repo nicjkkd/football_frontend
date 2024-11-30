@@ -24,7 +24,7 @@ const PlayersRow: React.FC<ListChildComponentProps<PlayerWithTeamName[]>> = ({
   const playerAge = useMemo(() => {
     return player.dateBirth
       ? new Date(player.dateBirth).toLocaleDateString()
-      : "Invalid Date";
+      : "---";
   }, [player.dateBirth]);
 
   const handleClick = (playerId: string) => {

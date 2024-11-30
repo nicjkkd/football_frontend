@@ -2,7 +2,6 @@ import { Dispatch, SetStateAction } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AxiosError } from "axios";
 import Input from "../Input";
 import {
   CreateTeam,
@@ -25,7 +24,7 @@ export default function CreateTeamForm({
 
   const { mutate, isLoading, isError, error } = useMutation<
     Team,
-    AxiosError<ErrorZodResponse>,
+    ErrorZodResponse,
     CreateTeam
   >({
     mutationFn: postTeam,
@@ -37,7 +36,6 @@ export default function CreateTeamForm({
   });
 
   const errorMessage =
-    // @ts-ignore
     error?.response?.data?.msg || "Error with processing request";
 
   const {
