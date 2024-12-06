@@ -16,8 +16,6 @@ function Leagues() {
     refetchOnMount: true,
   });
 
-  console.log(query.data);
-
   if (query.isError) {
     return <p>Error with fetching leagues</p>;
   }

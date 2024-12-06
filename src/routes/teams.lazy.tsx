@@ -24,8 +24,6 @@ function Teams() {
     return <p>Loading...</p>;
   }
 
-  console.log(query.data);
-
   return (
     <>
       <CreateTeam />
