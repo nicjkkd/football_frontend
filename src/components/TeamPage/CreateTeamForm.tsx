@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,11 +14,13 @@ import { postTeam } from "../../api/teams";
 interface Props {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setIsSubmitSuccessfull: Dispatch<SetStateAction<boolean>>;
+  setIsLoading: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function CreateTeamForm({
   setIsOpen,
   setIsSubmitSuccessfull,
+  setIsLoading,
 }: Props) {
   const queryClient = useQueryClient();
 
@@ -30,6 +32,7 @@ export default function CreateTeamForm({
     mutationFn: postTeam,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["teams"] });
+      setIsLoading(false);
       setIsSubmitSuccessfull(true);
       setIsOpen(false);
     },
@@ -37,6 +40,10 @@ export default function CreateTeamForm({
 
   const errorMessage =
     error?.response?.data?.msg || "Error with processing request";
+
+  useEffect(() => {
+    setIsLoading(isLoading);
+  }, [isLoading]);
 
   const {
     register,

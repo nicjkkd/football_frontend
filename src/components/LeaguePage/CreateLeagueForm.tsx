@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useMemo } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import Select from "react-select";
@@ -19,6 +19,7 @@ import { getTeams } from "../../api/teams";
 interface Props {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setIsSubmitSuccessfull: Dispatch<SetStateAction<boolean>>;
+  setIsLoading: Dispatch<SetStateAction<boolean>>;
 }
 
 interface SelectOptionsType {
@@ -29,6 +30,7 @@ interface SelectOptionsType {
 export default function CreateLeagueForm({
   setIsOpen,
   setIsSubmitSuccessfull,
+  setIsLoading,
 }: Props) {
   const queryClient = useQueryClient();
 
@@ -55,6 +57,7 @@ export default function CreateLeagueForm({
     mutationFn: postLeague,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["leagues"] });
+      setIsLoading(false);
       setIsSubmitSuccessfull(true);
       setIsOpen(false);
     },
@@ -62,6 +65,10 @@ export default function CreateLeagueForm({
 
   const errorMessage =
     error?.response?.data?.msg || "Error with processing request";
+
+  useEffect(() => {
+    setIsLoading(isLoading);
+  }, [isLoading]);
 
   const {
     register,
@@ -113,7 +120,6 @@ export default function CreateLeagueForm({
           control={control}
           name="teamIdToAdd"
           render={({ field: { onChange, value } }) => {
-            console.log(value);
             return (
               <Select
                 isMulti

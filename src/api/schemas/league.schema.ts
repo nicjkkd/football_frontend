@@ -1,6 +1,27 @@
 import { League, Team } from "../generated/zod";
 import { z } from "zod";
 
+// export const UpdateLeagueSchema = z.object({
+// leagueName: z
+//   .string()
+//   .min(2, { message: "Field must contain more than 2 characters" })
+//   .max(100, { message: "Field must contain less than 100 characters" })
+//   .optional(),
+// });
+
+export const UpdateLeagueSchema = z.object({
+  id: z.string().optional(),
+  leagueName: z
+    .string()
+    .min(2, { message: "Field must contain more than 2 characters" })
+    .max(100, { message: "Field must contain less than 100 characters" })
+    .optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+});
+
+export type UpdateLeague = z.infer<typeof UpdateLeagueSchema>;
+
 export const CreateLeagueSchema = z.object({
   leagueName: z
     .string()

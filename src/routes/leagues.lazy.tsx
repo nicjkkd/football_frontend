@@ -48,7 +48,7 @@ function Leagues() {
               width="100%"
               itemCount={query.data?.length || 0}
               itemData={query.data}
-              itemSize={50}
+              itemSize={80}
             >
               {LeaguesRow}
             </List>

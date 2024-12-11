@@ -1,6 +1,42 @@
 import { PositionSchema, Player } from "../generated/zod";
 import { z } from "zod";
 
+export const UpdatePlayerSchema = z.object({
+  id: z.string().optional(),
+  firstName: z
+    .string()
+    .min(2, { message: "Field must contain more than 2 characters" })
+    .max(100, { message: "Field must contain less than 100 characters" })
+    .optional(),
+  lastName: z
+    .string()
+    .min(2, { message: "Field must contain more than 2 characters" })
+    .max(100, { message: "Field must contain less than 100 characters" })
+    .optional(),
+  position: z
+    .union([PositionSchema, z.literal("")])
+    .transform((val) => (val === "" ? null : val))
+    .nullable()
+    .optional(),
+  dateBirth: z.coerce
+    .string()
+    .transform((val) => (val === "" ? null : new Date(val)))
+    .nullable()
+    .refine(
+      (val) => val === null || val === undefined || !isNaN(val.getTime()),
+      {
+        message: "Invalid date",
+      }
+    )
+    .optional(),
+  playerNumber: z.coerce.number().int().nullable().optional(),
+  teamId: z.string().optional().nullable(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+});
+
+export type UpdatePlayer = z.infer<typeof UpdatePlayerSchema>;
+
 export const CreatePlayerSchema = z.object({
   firstName: z
     .string()

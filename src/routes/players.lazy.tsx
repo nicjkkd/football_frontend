@@ -81,7 +81,7 @@ function Players() {
               width="100%"
               itemCount={playersDataWithTeamName?.length || 0}
               itemData={playersDataWithTeamName}
-              itemSize={50}
+              itemSize={80}
             >
               {PlayersRow}
             </List>

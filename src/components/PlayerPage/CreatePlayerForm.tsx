@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useMemo } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import Select from "react-select";
@@ -12,20 +12,18 @@ import {
 } from "../../api/schemas";
 import { postPlayer } from "../../api/players";
 import { getTeams } from "../../api/teams";
+import { SelectOptionsType } from "../../models";
 
 interface Props {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setIsSubmitSuccessfull: Dispatch<SetStateAction<boolean>>;
-}
-
-interface SelectOptionsType {
-  value: string;
-  label: string;
+  setIsLoading: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function CreatePlayerForm({
   setIsOpen,
   setIsSubmitSuccessfull,
+  setIsLoading,
 }: Props) {
   const queryClient = useQueryClient();
 
@@ -52,6 +50,7 @@ export default function CreatePlayerForm({
     mutationFn: postPlayer,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["players"] });
+      setIsLoading(false);
       setIsSubmitSuccessfull(true);
       setIsOpen(false);
     },
@@ -59,6 +58,10 @@ export default function CreatePlayerForm({
 
   const errorMessage =
     error?.response?.data?.msg || "Error with processing request";
+
+  useEffect(() => {
+    setIsLoading(isLoading);
+  }, [isLoading]);
 
   const {
     register,
