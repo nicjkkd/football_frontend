@@ -1,12 +1,19 @@
 import { memo } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { ListChildComponentProps } from "react-window";
-import { League, UpdateLeague, UpdateLeagueSchema } from "../../api/schemas";
+import {
+  ErrorZodResponse,
+  League,
+  UpdateLeague,
+  UpdateLeagueSchema,
+} from "../../api/schemas";
 import { deleteLeague, updateLeague } from "../../api/leagues";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Input from "../Input";
 import Button from "../Button";
+import { Bounce, toast } from "react-toastify";
+import { UpdateLeagueProps } from "../../models";
 
 const LeaguesRow: React.FC<ListChildComponentProps<League[]>> = ({
   index,
@@ -33,12 +40,17 @@ const LeaguesRow: React.FC<ListChildComponentProps<League[]>> = ({
     register,
     handleSubmit,
     formState: { errors, isDirty, isSubmitSuccessful },
+    reset,
   } = useForm<UpdateLeague>({
     resolver: zodResolver(UpdateLeagueSchema),
     values: data[index],
   });
 
-  const { mutate: updateMutate, isLoading: isUpdateLoading } = useMutation({
+  const { mutate: updateMutate, isLoading: isUpdateLoading } = useMutation<
+    League,
+    ErrorZodResponse,
+    UpdateLeagueProps
+  >({
     mutationFn: ({
       leagueId,
       leagueChanges,
@@ -49,6 +61,23 @@ const LeaguesRow: React.FC<ListChildComponentProps<League[]>> = ({
     onSuccess: (data) => {
       console.log(`Updated: `, data);
       queryClient.invalidateQueries({ queryKey: ["leagues"] });
+    },
+    onError: (error) => {
+      toast.error(
+        error?.response?.data?.msg || "Error with processing request",
+        {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        }
+      );
+      reset();
     },
   });
 

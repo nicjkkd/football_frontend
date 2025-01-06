@@ -7,9 +7,13 @@ const CreateLeague = () => {
   const [isSubmitSuccessfull, setIsSubmitSuccessfull] =
     useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isSubmitWithError, setIsSubmitWithError] = useState<string>("");
 
   useEffect(() => {
-    if (isOpen) setIsSubmitSuccessfull(false);
+    if (isOpen) {
+      setIsSubmitSuccessfull(false);
+      // setIsSubmitWithError("");
+    }
   }, [isOpen]);
 
   useEffect(() => {
@@ -17,6 +21,15 @@ const CreateLeague = () => {
       setTimeout(() => setIsSubmitSuccessfull(false), 3000);
     }
   }, [isSubmitSuccessfull]);
+
+  useEffect(() => {
+    if (isSubmitWithError) {
+      setIsOpen(true);
+      setTimeout(() => {
+        setIsSubmitWithError("");
+      }, 3000);
+    }
+  }, [isSubmitWithError]);
 
   useEffect(() => {
     if (isLoading) setIsOpen(false);
@@ -48,11 +61,17 @@ const CreateLeague = () => {
           League was successfully created!
         </div>
       ) : null}
+      {isSubmitWithError && isOpen ? (
+        <div className="text-red-800 bg-red-100 border border-red-200 p-3 rounded-md text-center mb-4">
+          {isSubmitWithError}
+        </div>
+      ) : null}
       {isOpen ? (
         <CreateLeagueForm
           setIsOpen={setIsOpen}
           setIsSubmitSuccessfull={setIsSubmitSuccessfull}
           setIsLoading={setIsLoading}
+          setIsSubmitWithError={setIsSubmitWithError}
         />
       ) : null}
     </>

@@ -4,6 +4,7 @@ import { useQuery } from "react-query";
 import { FixedSizeList as List } from "react-window";
 import CreateLeague from "../components/LeaguePage/CreateLeague";
 import LeaguesRow from "../components/LeaguePage/LeaguesRow";
+import { useReactQuerySubscription } from "../customHooks";
 
 export const Route = createLazyFileRoute("/leagues")({
   component: Leagues,
@@ -15,6 +16,8 @@ function Leagues() {
     queryFn: getLeagues,
     refetchOnMount: true,
   });
+
+  useReactQuerySubscription();
 
   if (query.isError) {
     return <p>Error with fetching leagues</p>;

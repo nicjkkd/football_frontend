@@ -4,6 +4,7 @@ import { ListChildComponentProps } from "react-window";
 import {
   CreateTeam,
   CreateTeamSchema,
+  ErrorZodResponse,
   Team,
   UpdateTeam,
   UpdateTeamSchema,
@@ -13,6 +14,8 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Input from "../Input";
 import Button from "../Button";
+import { Bounce, toast } from "react-toastify";
+import { UpdateTeamProps } from "../../models";
 
 const TeamsRow: React.FC<ListChildComponentProps<Team[]>> = ({
   index,
@@ -38,12 +41,17 @@ const TeamsRow: React.FC<ListChildComponentProps<Team[]>> = ({
     register,
     handleSubmit,
     formState: { errors, isSubmitSuccessful, isDirty },
+    reset,
   } = useForm<CreateTeam>({
     resolver: zodResolver(CreateTeamSchema),
     values: data[index],
   });
 
-  const { mutate: updateMutate, isLoading: isUpdateLoading } = useMutation({
+  const { mutate: updateMutate, isLoading: isUpdateLoading } = useMutation<
+    Team,
+    ErrorZodResponse,
+    UpdateTeamProps
+  >({
     mutationFn: ({
       teamId,
       teamChanges,
@@ -54,6 +62,23 @@ const TeamsRow: React.FC<ListChildComponentProps<Team[]>> = ({
     onSuccess: (data) => {
       console.log(`Updated: `, data);
       queryClient.invalidateQueries({ queryKey: ["teams"] });
+    },
+    onError: (error) => {
+      toast.error(
+        error?.response?.data?.msg || "Error with processing request",
+        {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        }
+      );
+      reset();
     },
   });
 

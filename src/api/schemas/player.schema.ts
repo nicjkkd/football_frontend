@@ -37,6 +37,10 @@ export const UpdatePlayerSchema = z.object({
 
 export type UpdatePlayer = z.infer<typeof UpdatePlayerSchema>;
 
+export type UpdatePlayerForm = Omit<UpdatePlayer, "dateBirth"> & {
+  dateBirth: string | Date | null | undefined;
+};
+
 export const CreatePlayerSchema = z.object({
   firstName: z
     .string()

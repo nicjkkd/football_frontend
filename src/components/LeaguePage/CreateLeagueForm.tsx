@@ -15,11 +15,13 @@ import {
 } from "../../api/schemas";
 import { postLeague } from "../../api/leagues";
 import { getTeams } from "../../api/teams";
+import Button from "../Button";
 
 interface Props {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setIsSubmitSuccessfull: Dispatch<SetStateAction<boolean>>;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
+  setIsSubmitWithError: Dispatch<SetStateAction<string>>;
 }
 
 interface SelectOptionsType {
@@ -31,6 +33,7 @@ export default function CreateLeagueForm({
   setIsOpen,
   setIsSubmitSuccessfull,
   setIsLoading,
+  setIsSubmitWithError,
 }: Props) {
   const queryClient = useQueryClient();
 
@@ -49,7 +52,7 @@ export default function CreateLeagueForm({
     return teamOptionsArray;
   }, [teamsQuery.data]);
 
-  const { mutate, isLoading, isError, error } = useMutation<
+  const { mutate, isLoading } = useMutation<
     League | ServerCreateLeagueResponseWithQueryParams,
     ErrorZodResponse,
     FinalCreateLeague
@@ -61,10 +64,14 @@ export default function CreateLeagueForm({
       setIsSubmitSuccessfull(true);
       setIsOpen(false);
     },
+    onError: (error) => {
+      const errorMessage =
+        error?.response?.data?.msg || "Error with processing request";
+      setIsLoading(false);
+      setIsSubmitWithError(errorMessage);
+      setIsOpen(true);
+    },
   });
-
-  const errorMessage =
-    error?.response?.data?.msg || "Error with processing request";
 
   useEffect(() => {
     setIsLoading(isLoading);
@@ -101,12 +108,7 @@ export default function CreateLeagueForm({
   };
 
   return (
-    <>
-      {isError && (
-        <div className="text-red-800 bg-red-100 border border-red-200 p-3 rounded-md text-center mb-4">
-          {errorMessage}
-        </div>
-      )}
+    <div>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="space-y-4 max-w-md mx-auto m-5"
@@ -138,22 +140,22 @@ export default function CreateLeagueForm({
           }}
         />
 
-        <button
+        <Button
           type="submit"
           className="w-full py-2 bg-gray-800 text-white rounded-md transition hover:bg-gray-700 cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed disabled:text-gray-200"
           disabled={isLoading}
         >
           Submit
-        </button>
+        </Button>
 
-        <button
+        <Button
           type="button"
           className="w-full py-2 bg-gray-800 text-white rounded-md transition hover:bg-gray-700 cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed disabled:text-gray-200"
           onClick={handleReset}
         >
           Reset Form
-        </button>
+        </Button>
       </form>
-    </>
+    </div>
   );
 }

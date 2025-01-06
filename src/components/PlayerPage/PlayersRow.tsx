@@ -5,11 +5,22 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import Select from "react-select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Input from "../Input";
-import { UpdatePlayer, UpdatePlayerSchema } from "../../api/schemas";
+import {
+  ErrorZodResponse,
+  Player,
+  UpdatePlayer,
+  UpdatePlayerForm,
+  UpdatePlayerSchema,
+} from "../../api/schemas";
 import { deletePlayer, updatePlayer } from "../../api/players";
 import { getTeams } from "../../api/teams";
-import { PlayerWithTeamName, SelectOptionsType } from "../../models";
+import {
+  PlayerWithTeamName,
+  SelectOptionsType,
+  UpdatePlayerProps,
+} from "../../models";
 import Button from "../Button";
+import { Bounce, toast } from "react-toastify";
 
 const PlayersRow: React.FC<ListChildComponentProps<PlayerWithTeamName[]>> = ({
   index,
@@ -45,17 +56,35 @@ const PlayersRow: React.FC<ListChildComponentProps<PlayerWithTeamName[]>> = ({
     deleteMutate(playerId);
   };
 
+  const rawValues = data[index];
+  const defaultValues = useMemo(() => {
+    if (rawValues.dateBirth) {
+      return {
+        ...rawValues,
+        dateBirth: new Date(rawValues?.dateBirth).toISOString().split("T")[0],
+      };
+    } else {
+      return rawValues;
+    }
+  }, [rawValues]);
+
   const {
     register,
     handleSubmit,
     control,
     formState: { errors, isDirty, isSubmitSuccessful },
-  } = useForm<UpdatePlayer>({
+    reset,
+  } = useForm<UpdatePlayerForm>({
     resolver: zodResolver(UpdatePlayerSchema),
-    values: data[index],
+    values: defaultValues,
+    defaultValues: defaultValues,
   });
 
-  const { mutate: updateMutate, isLoading: isUpdateLoading } = useMutation({
+  const { mutate: updateMutate, isLoading: isUpdateLoading } = useMutation<
+    Player,
+    ErrorZodResponse,
+    UpdatePlayerProps
+  >({
     mutationFn: ({
       playerId,
       playerChanges,
@@ -67,10 +96,26 @@ const PlayersRow: React.FC<ListChildComponentProps<PlayerWithTeamName[]>> = ({
       console.log(`Updated: `, data);
       queryClient.invalidateQueries({ queryKey: ["players"] });
     },
+    onError: (error) => {
+      toast.error(
+        error?.response?.data?.msg || "Error with processing request",
+        {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        }
+      );
+      reset();
+    },
   });
 
-  const onSubmit: SubmitHandler<UpdatePlayer> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<UpdatePlayerForm> = (data) => {
     let dataToSubmit = { ...data };
 
     if (!data.teamId && !data.playerNumber) {
@@ -128,6 +173,7 @@ const PlayersRow: React.FC<ListChildComponentProps<PlayerWithTeamName[]>> = ({
 
         <Input
           placeholder="Birth Date"
+          type="date"
           {...register("dateBirth")}
           error={errors.dateBirth?.message}
         ></Input>
