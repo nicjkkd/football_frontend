@@ -7,6 +7,7 @@ import { getTeams } from "../api/teams";
 import { useMemo } from "react";
 import { Team } from "../api/schemas";
 import PlayersRow from "../components/PlayerPage/PlayersRow";
+import { useReactQuerySubscription } from "../customHooks";
 
 export const Route = createLazyFileRoute("/players")({
   component: Players,
@@ -24,6 +25,8 @@ function Players() {
     queryFn: getTeams,
     refetchOnMount: false,
   });
+
+  useReactQuerySubscription();
 
   const teamMapById = useMemo<Record<string, Team | undefined>>(() => {
     const teamMap: Record<string, Team | undefined> = {};

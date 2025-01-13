@@ -6,6 +6,7 @@ import {
   CreateTeamSchema,
   ErrorZodResponse,
   Team,
+  TeamWithWebSocketEventId,
   UpdateTeam,
   UpdateTeamSchema,
 } from "../../api/schemas";
@@ -25,7 +26,11 @@ const TeamsRow: React.FC<ListChildComponentProps<Team[]>> = ({
   const team = data[index];
   const queryClient = useQueryClient();
 
-  const { mutate: deleteMutate, isLoading: isDeleteLoading } = useMutation({
+  const { mutate: deleteMutate, isLoading: isDeleteLoading } = useMutation<
+    TeamWithWebSocketEventId,
+    ErrorZodResponse,
+    string
+  >({
     mutationFn: deleteTeam,
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["teams"] });
@@ -48,7 +53,7 @@ const TeamsRow: React.FC<ListChildComponentProps<Team[]>> = ({
   });
 
   const { mutate: updateMutate, isLoading: isUpdateLoading } = useMutation<
-    Team,
+    TeamWithWebSocketEventId,
     ErrorZodResponse,
     UpdateTeamProps
   >({

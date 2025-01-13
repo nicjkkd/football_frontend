@@ -73,3 +73,5 @@ export const CreatePlayerSchema = z.object({
 export type CreatePlayer = z.infer<typeof CreatePlayerSchema>;
 
 export type { Player };
+
+export type PlayerWithWebSocketEventId = Player & { eventId: string };

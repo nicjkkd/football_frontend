@@ -44,3 +44,5 @@ export const CreateTeamSchema = z.object({
 export type CreateTeam = z.infer<typeof CreateTeamSchema>;
 
 export type { Team };
+
+export type TeamWithWebSocketEventId = Team & { eventId: string };

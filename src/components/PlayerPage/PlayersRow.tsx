@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Input from "../Input";
 import {
   ErrorZodResponse,
-  Player,
+  PlayerWithWebSocketEventId,
   UpdatePlayer,
   UpdatePlayerForm,
   UpdatePlayerSchema,
@@ -45,7 +45,11 @@ const PlayersRow: React.FC<ListChildComponentProps<PlayerWithTeamName[]>> = ({
     return teamOptionsArray;
   }, [teamsQuery.data]);
 
-  const { mutate: deleteMutate, isLoading: isDeleteLoading } = useMutation({
+  const { mutate: deleteMutate, isLoading: isDeleteLoading } = useMutation<
+    PlayerWithWebSocketEventId,
+    ErrorZodResponse,
+    string
+  >({
     mutationFn: deletePlayer,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["players"] });
@@ -81,7 +85,7 @@ const PlayersRow: React.FC<ListChildComponentProps<PlayerWithTeamName[]>> = ({
   });
 
   const { mutate: updateMutate, isLoading: isUpdateLoading } = useMutation<
-    Player,
+    PlayerWithWebSocketEventId,
     ErrorZodResponse,
     UpdatePlayerProps
   >({

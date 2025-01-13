@@ -8,7 +8,7 @@ import {
   CreatePlayerSchema,
   CreatePlayer,
   ErrorZodResponse,
-  Player,
+  PlayerWithWebSocketEventId,
 } from "../../api/schemas";
 import { postPlayer } from "../../api/players";
 import { getTeams } from "../../api/teams";
@@ -46,7 +46,7 @@ export default function CreatePlayerForm({
   }, [teamsQuery.data]);
 
   const { mutate, isLoading } = useMutation<
-    Player,
+    PlayerWithWebSocketEventId,
     ErrorZodResponse,
     CreatePlayer
   >({

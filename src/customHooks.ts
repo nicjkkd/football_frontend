@@ -3,7 +3,7 @@ import { useQueryClient } from "react-query";
 import { Bounce, toast } from "react-toastify";
 
 export type WebSocketEvent = {
-  operation: "invalidate";
+  operation: "invalidate" | "create" | "delete" | "update";
   entity: Array<string>;
   id?: number;
   type?: string;
@@ -23,31 +23,54 @@ export const useReactQuerySubscription = () => {
 
     ws.current.addEventListener("message", (event) => {
       try {
-        const data: WebSocketEvent = JSON.parse(event.data);
+        const messageData: WebSocketEvent = JSON.parse(event.data);
+        console.log(messageData);
         //___
-        if (data.type)
-          toast.success(
-            `${data.type} Successfully ` + JSON.stringify(data.data),
-            {
-              position: "bottom-right",
-              autoClose: 3000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-              transition: Bounce,
-            }
-          );
-        console.log(data);
+        if (messageData.type)
+          toast.success(`${messageData.type} Successfully `, {
+            position: "bottom-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
+          });
         //___
-        switch (data.operation) {
+        switch (messageData.operation) {
           case "invalidate":
             queryClient.invalidateQueries(
-              [...data.entity, data.id].filter(Boolean)
+              [...messageData.entity, messageData.id].filter(Boolean)
             );
-            console.log("invalidated");
+            break;
+
+          case "create":
+            queryClient.setQueriesData(messageData.entity, (oldData) => {
+              if (!Array.isArray(oldData)) return [messageData.data];
+              return [...oldData, messageData.data];
+            });
+            break;
+
+          case "update":
+            queryClient.setQueriesData(messageData.entity, (oldData) => {
+              const update = (entity: Record<string, unknown>) =>
+                entity.id === messageData.id
+                  ? { ...entity, ...messageData.data }
+                  : entity;
+
+              return Array.isArray(oldData)
+                ? oldData.map(update)
+                : update(oldData as Record<string, unknown>);
+            });
+            break;
+
+          case "delete":
+            queryClient.setQueriesData(messageData.entity, (oldData) => {
+              if (!Array.isArray(oldData)) return oldData;
+              return oldData.filter((item) => item.id !== messageData.id);
+            });
             break;
         }
       } catch (e) {
@@ -61,8 +84,3 @@ export const useReactQuerySubscription = () => {
     };
   }, [queryClient]);
 };
-
-// крім операцій invalidate буде replace, add, remove та зробити додавання або видалення або реплейс не через invalidateQueries, а шляхом додавання, видалення, оновлення гравців з існуючого масиву
-// teams як ліги зробити
-
-// кожний інвент, який створюється має мати унікальний id

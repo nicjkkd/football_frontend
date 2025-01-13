@@ -1,14 +1,6 @@
 import { League, Team } from "../generated/zod";
 import { z } from "zod";
 
-// export const UpdateLeagueSchema = z.object({
-// leagueName: z
-//   .string()
-//   .min(2, { message: "Field must contain more than 2 characters" })
-//   .max(100, { message: "Field must contain less than 100 characters" })
-//   .optional(),
-// });
-
 export const UpdateLeagueSchema = z.object({
   id: z.string().optional(),
   leagueName: z
@@ -47,4 +39,7 @@ export type FinalCreateLeague = z.infer<typeof FinalCreateLeagueSchema>;
 
 export type { League };
 
-export type ServerCreateLeagueResponseWithQueryParams = Team[] & League;
+export type ServerCreateLeagueResponseWithQueryParamsAndWebSocketEventId =
+  Team[] & League & { eventId: string };
+
+export type LeagueWithWebSocketEventId = League & { eventId: string };

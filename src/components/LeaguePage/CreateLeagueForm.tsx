@@ -10,8 +10,8 @@ import {
   ErrorZodResponse,
   FinalCreateLeague,
   FinalCreateLeagueSchema,
-  League,
-  ServerCreateLeagueResponseWithQueryParams,
+  LeagueWithWebSocketEventId,
+  ServerCreateLeagueResponseWithQueryParamsAndWebSocketEventId,
 } from "../../api/schemas";
 import { postLeague } from "../../api/leagues";
 import { getTeams } from "../../api/teams";
@@ -53,7 +53,8 @@ export default function CreateLeagueForm({
   }, [teamsQuery.data]);
 
   const { mutate, isLoading } = useMutation<
-    League | ServerCreateLeagueResponseWithQueryParams,
+    | LeagueWithWebSocketEventId
+    | ServerCreateLeagueResponseWithQueryParamsAndWebSocketEventId,
     ErrorZodResponse,
     FinalCreateLeague
   >({

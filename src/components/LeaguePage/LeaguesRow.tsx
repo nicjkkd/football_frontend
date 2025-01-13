@@ -4,6 +4,7 @@ import { ListChildComponentProps } from "react-window";
 import {
   ErrorZodResponse,
   League,
+  LeagueWithWebSocketEventId,
   UpdateLeague,
   UpdateLeagueSchema,
 } from "../../api/schemas";
@@ -24,7 +25,11 @@ const LeaguesRow: React.FC<ListChildComponentProps<League[]>> = ({
 
   const league = data[index];
 
-  const { mutate: deleteMutate, isLoading: isDeleteLoading } = useMutation({
+  const { mutate: deleteMutate, isLoading: isDeleteLoading } = useMutation<
+    LeagueWithWebSocketEventId,
+    ErrorZodResponse,
+    string
+  >({
     mutationFn: deleteLeague,
     onSuccess: (data) => {
       console.log(`Deleted:`, data);
@@ -47,7 +52,7 @@ const LeaguesRow: React.FC<ListChildComponentProps<League[]>> = ({
   });
 
   const { mutate: updateMutate, isLoading: isUpdateLoading } = useMutation<
-    League,
+    LeagueWithWebSocketEventId,
     ErrorZodResponse,
     UpdateLeagueProps
   >({

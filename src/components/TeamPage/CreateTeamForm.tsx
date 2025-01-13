@@ -7,7 +7,7 @@ import {
   CreateTeam,
   CreateTeamSchema,
   ErrorZodResponse,
-  Team,
+  TeamWithWebSocketEventId,
 } from "../../api/schemas";
 import { postTeam } from "../../api/teams";
 import Button from "../Button";
@@ -27,24 +27,26 @@ export default function CreateTeamForm({
 }: Props) {
   const queryClient = useQueryClient();
 
-  const { mutate, isLoading } = useMutation<Team, ErrorZodResponse, CreateTeam>(
-    {
-      mutationFn: postTeam,
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["teams"] });
-        setIsLoading(false);
-        setIsSubmitSuccessfull(true);
-        setIsOpen(false);
-      },
-      onError: (error) => {
-        const errorMessage =
-          error?.response?.data?.msg || "Error with processing request";
-        setIsLoading(false);
-        setIsSubmitWithError(errorMessage);
-        setIsOpen(true);
-      },
-    }
-  );
+  const { mutate, isLoading } = useMutation<
+    TeamWithWebSocketEventId,
+    ErrorZodResponse,
+    CreateTeam
+  >({
+    mutationFn: postTeam,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["teams"] });
+      setIsLoading(false);
+      setIsSubmitSuccessfull(true);
+      setIsOpen(false);
+    },
+    onError: (error) => {
+      const errorMessage =
+        error?.response?.data?.msg || "Error with processing request";
+      setIsLoading(false);
+      setIsSubmitWithError(errorMessage);
+      setIsOpen(true);
+    },
+  });
 
   useEffect(() => {
     setIsLoading(isLoading);
