@@ -24,7 +24,7 @@ export const useReactQuerySubscription = () => {
     ws.current.addEventListener("message", (event) => {
       try {
         const messageData: WebSocketEvent = JSON.parse(event.data);
-        console.log(messageData);
+
         //___
         if (messageData.type)
           toast.success(`${messageData.type} Successfully `, {
