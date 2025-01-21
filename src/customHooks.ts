@@ -1,16 +1,17 @@
 import { useEffect, useRef } from "react";
 import { useQueryClient } from "react-query";
 import { Bounce, toast } from "react-toastify";
+import { WebSocketEvent } from "./models";
+import { useTheme } from "./context/themeContext";
 
-export type WebSocketEvent = {
-  operation: "invalidate" | "create" | "delete" | "update";
-  entity: Array<string>;
-  id?: number;
-  type?: string;
-  data?: Record<string, string>;
-};
+function hasData(
+  messageData: WebSocketEvent
+): messageData is WebSocketEvent & { data: Record<string, unknown> } {
+  return messageData.data !== undefined;
+}
 
 export const useReactQuerySubscription = () => {
+  const darkTheme = useTheme();
   const queryClient = useQueryClient();
   const ws = useRef<WebSocket>();
 
@@ -26,18 +27,17 @@ export const useReactQuerySubscription = () => {
         const messageData: WebSocketEvent = JSON.parse(event.data);
         console.log(messageData);
         //___
-        if (messageData.type)
-          toast.success(`${messageData.type} Successfully `, {
-            position: "bottom-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            transition: Bounce,
-          });
+        toast.success(`${messageData.operation} successfully `, {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: darkTheme ? "dark" : "light",
+          transition: Bounce,
+        });
         //___
         switch (messageData.operation) {
           case "invalidate":
@@ -46,10 +46,30 @@ export const useReactQuerySubscription = () => {
             );
             break;
 
+          // case "create":
+          //   queryClient.setQueriesData(messageData.entity, (oldData) => {
+          //     if (!Array.isArray(oldData)) return [messageData.data];
+          //     return [...oldData, messageData.data];
+          //   });
+          //   break;
+
           case "create":
             queryClient.setQueriesData(messageData.entity, (oldData) => {
               if (!Array.isArray(oldData)) return [messageData.data];
-              return [...oldData, messageData.data];
+              if (!hasData(messageData)) return oldData;
+
+              const newData = [...oldData];
+              const index = newData.findIndex(
+                (item) => item.id > messageData.data?.id
+              );
+
+              if (index === -1) {
+                newData.push(messageData.data);
+              } else {
+                newData.splice(index, 0, messageData.data);
+              }
+
+              return newData;
             });
             break;
 
