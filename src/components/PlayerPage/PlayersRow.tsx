@@ -21,6 +21,7 @@ import {
 } from "../../models";
 import Button from "../Button";
 import { Bounce, toast } from "react-toastify";
+import { useTheme } from "../../context/themeContext";
 
 const PlayersRow: React.FC<ListChildComponentProps<PlayerWithTeamName[]>> = ({
   index,
@@ -29,6 +30,7 @@ const PlayersRow: React.FC<ListChildComponentProps<PlayerWithTeamName[]>> = ({
 }) => {
   const player = data[index];
   const queryClient = useQueryClient();
+  const darkTheme = useTheme();
 
   const teamsQuery = useQuery({
     queryKey: ["teams"],
@@ -111,7 +113,7 @@ const PlayersRow: React.FC<ListChildComponentProps<PlayerWithTeamName[]>> = ({
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "light",
+          theme: darkTheme ? "dark" : "light",
           transition: Bounce,
         }
       );

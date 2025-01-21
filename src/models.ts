@@ -23,3 +23,16 @@ export interface UpdateLeagueProps {
   leagueId: string;
   leagueChanges: UpdateLeague;
 }
+
+enum OperationTypes {
+  invalidate = "invalidate",
+  create = "create",
+  delete = "delete",
+  update = "update",
+}
+export type WebSocketEvent = {
+  operation: OperationTypes;
+  entity: Array<string>;
+  id?: number;
+  data?: Record<string, string>;
+};

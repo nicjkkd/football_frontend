@@ -3,12 +3,14 @@ import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import Header from "../components/Header";
 import "../index.css";
 import { Bounce, ToastContainer } from "react-toastify";
+import { useTheme } from "../context/themeContext";
 
 export const Route = createRootRoute({
   component: RootComponent,
 });
 
 function RootComponent() {
+  const darkTheme = useTheme();
   return (
     <>
       <Header />
@@ -24,7 +26,7 @@ function RootComponent() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="light"
+        theme={darkTheme ? "dark" : "light"}
         transition={Bounce}
       />
       <TanStackRouterDevtools />

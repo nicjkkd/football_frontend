@@ -17,6 +17,7 @@ import Input from "../Input";
 import Button from "../Button";
 import { Bounce, toast } from "react-toastify";
 import { UpdateTeamProps } from "../../models";
+import { useTheme } from "../../context/themeContext";
 
 const TeamsRow: React.FC<ListChildComponentProps<Team[]>> = ({
   index,
@@ -25,6 +26,7 @@ const TeamsRow: React.FC<ListChildComponentProps<Team[]>> = ({
 }) => {
   const team = data[index];
   const queryClient = useQueryClient();
+  const darkTheme = useTheme();
 
   const { mutate: deleteMutate, isLoading: isDeleteLoading } = useMutation<
     TeamWithWebSocketEventId,
@@ -79,7 +81,7 @@ const TeamsRow: React.FC<ListChildComponentProps<Team[]>> = ({
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "light",
+          theme: darkTheme ? "dark" : "light",
           transition: Bounce,
         }
       );

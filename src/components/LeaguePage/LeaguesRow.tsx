@@ -15,15 +15,16 @@ import Input from "../Input";
 import Button from "../Button";
 import { Bounce, toast } from "react-toastify";
 import { UpdateLeagueProps } from "../../models";
+import { useTheme } from "../../context/themeContext";
 
 const LeaguesRow: React.FC<ListChildComponentProps<League[]>> = ({
   index,
   style,
   data,
 }) => {
-  const queryClient = useQueryClient();
-
   const league = data[index];
+  const queryClient = useQueryClient();
+  const darkTheme = useTheme();
 
   const { mutate: deleteMutate, isLoading: isDeleteLoading } = useMutation<
     LeagueWithWebSocketEventId,
@@ -78,7 +79,7 @@ const LeaguesRow: React.FC<ListChildComponentProps<League[]>> = ({
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "light",
+          theme: darkTheme ? "dark" : "light",
           transition: Bounce,
         }
       );
