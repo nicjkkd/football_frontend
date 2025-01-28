@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useQueryClient } from "react-query";
 import { Bounce, toast } from "react-toastify";
 import { WebSocketEvent } from "./models";
-import { useTheme } from "./context/themeContext";
+import { useTheme } from "./context/ThemeContext";
 
 function hasData(
   messageData: WebSocketEvent

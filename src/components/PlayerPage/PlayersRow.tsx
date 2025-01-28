@@ -21,7 +21,7 @@ import {
 } from "../../models";
 import Button from "../Button";
 import { Bounce, toast } from "react-toastify";
-import { useTheme } from "../../context/themeContext";
+import { useTheme } from "../../context/ThemeContext";
 
 const PlayersRow: React.FC<ListChildComponentProps<PlayerWithTeamName[]>> = ({
   index,
@@ -34,7 +34,8 @@ const PlayersRow: React.FC<ListChildComponentProps<PlayerWithTeamName[]>> = ({
 
   const teamsQuery = useQuery({
     queryKey: ["teams"],
-    queryFn: getTeams,
+    // queryFn: getTeams,
+    queryFn: ({ signal }) => getTeams(signal),
     refetchOnMount: false,
   });
 
