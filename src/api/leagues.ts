@@ -7,8 +7,10 @@ import {
 } from "./schemas";
 import axios from "axios";
 
-export const getLeagues = async (): Promise<Array<League>> =>
-  axios.get(`${API_URL}/leagues`).then((response) => response.data);
+export const getLeagues = async (
+  signal: AbortSignal | undefined
+): Promise<Array<League>> =>
+  axios.get(`${API_URL}/leagues`, { signal }).then((response) => response.data);
 
 export const postLeague = async (
   newLeague: FinalCreateLeague

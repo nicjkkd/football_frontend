@@ -7,8 +7,10 @@ import {
   UpdatePlayer,
 } from "./schemas";
 
-export const getPlayers = async (): Promise<Array<Player>> =>
-  axios.get(`${API_URL}/players`).then((response) => response.data);
+export const getPlayers = async (
+  signal: AbortSignal | undefined
+): Promise<Array<Player>> =>
+  axios.get(`${API_URL}/players`, { signal }).then((response) => response.data);
 
 export const postPlayer = async (
   newPlayer: CreatePlayer

@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { PopoverGroup } from "@headlessui/react";
 import { Link } from "@tanstack/react-router";
-import { useTheme, useThemeUpdate } from "../context/themeContext";
+import { useTheme, useThemeUpdate } from "../context/ThemeContext";
 
 const Header = () => {
   const darkTheme = useTheme();

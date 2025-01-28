@@ -3,7 +3,7 @@ import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import Header from "../components/Header";
 import "../index.css";
 import { Bounce, ToastContainer } from "react-toastify";
-import { useTheme } from "../context/themeContext";
+import { useTheme } from "../context/ThemeContext";
 
 export const Route = createRootRoute({
   component: RootComponent,

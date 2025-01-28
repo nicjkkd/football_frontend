@@ -7,8 +7,10 @@ import {
   UpdateTeam,
 } from "./schemas";
 
-export const getTeams = async (): Promise<Array<Team>> =>
-  axios.get(`${API_URL}/teams`).then((response) => response.data);
+export const getTeams = async (
+  signal: AbortSignal | undefined
+): Promise<Array<Team>> =>
+  axios.get(`${API_URL}/teams`, { signal }).then((response) => response.data);
 
 export const postTeam = async (
   newTeam: CreateTeam

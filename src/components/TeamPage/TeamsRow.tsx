@@ -17,7 +17,7 @@ import Input from "../Input";
 import Button from "../Button";
 import { Bounce, toast } from "react-toastify";
 import { UpdateTeamProps } from "../../models";
-import { useTheme } from "../../context/themeContext";
+import { useTheme } from "../../context/ThemeContext";
 
 const TeamsRow: React.FC<ListChildComponentProps<Team[]>> = ({
   index,
