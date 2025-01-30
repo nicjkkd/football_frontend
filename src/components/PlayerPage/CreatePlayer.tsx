@@ -12,7 +12,6 @@ const CreatePlayer = () => {
   useEffect(() => {
     if (isOpen) {
       setIsSubmitSuccessfull(false);
-      // setIsSubmitWithError("");
     }
   }, [isOpen]);
 

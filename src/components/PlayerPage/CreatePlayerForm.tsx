@@ -32,7 +32,7 @@ export default function CreatePlayerForm({
 
   const teamsQuery = useQuery({
     queryKey: ["teams"],
-    queryFn: getTeams,
+    queryFn: ({ signal }) => getTeams(signal),
     refetchOnMount: false,
   });
 

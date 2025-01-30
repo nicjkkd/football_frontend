@@ -13,7 +13,6 @@ export const Route = createLazyFileRoute("/teams")({
 function Teams() {
   const query = useQuery({
     queryKey: ["teams"],
-    // queryFn: getTeams,
     queryFn: ({ signal }) => getTeams(signal),
 
     refetchOnMount: true,

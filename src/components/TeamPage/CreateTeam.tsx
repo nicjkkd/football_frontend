@@ -12,7 +12,6 @@ const CreateTeam = () => {
   useEffect(() => {
     if (isOpen) {
       setIsSubmitSuccessfull(false);
-      // setIsSubmitWithError("");
     }
   }, [isOpen]);
 
