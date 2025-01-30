@@ -12,7 +12,6 @@ const CreateLeague = () => {
   useEffect(() => {
     if (isOpen) {
       setIsSubmitSuccessfull(false);
-      // setIsSubmitWithError("");
     }
   }, [isOpen]);
 

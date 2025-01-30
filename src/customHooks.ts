@@ -26,7 +26,7 @@ export const useReactQuerySubscription = () => {
       try {
         const messageData: WebSocketEvent = JSON.parse(event.data);
         console.log(messageData);
-        //___
+
         toast.success(`${messageData.operation} successfully `, {
           position: "bottom-right",
           autoClose: 3000,
@@ -38,20 +38,13 @@ export const useReactQuerySubscription = () => {
           theme: darkTheme ? "dark" : "light",
           transition: Bounce,
         });
-        //___
+
         switch (messageData.operation) {
           case "invalidate":
             queryClient.invalidateQueries(
               [...messageData.entity, messageData.id].filter(Boolean)
             );
             break;
-
-          // case "create":
-          //   queryClient.setQueriesData(messageData.entity, (oldData) => {
-          //     if (!Array.isArray(oldData)) return [messageData.data];
-          //     return [...oldData, messageData.data];
-          //   });
-          //   break;
 
           case "create":
             queryClient.setQueriesData(messageData.entity, (oldData) => {

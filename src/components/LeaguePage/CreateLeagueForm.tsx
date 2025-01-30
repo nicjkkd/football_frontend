@@ -39,7 +39,7 @@ export default function CreateLeagueForm({
 
   const teamsQuery = useQuery({
     queryKey: ["teams"],
-    queryFn: getTeams,
+    queryFn: ({ signal }) => getTeams(signal),
     refetchOnMount: false,
   });
 
