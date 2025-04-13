@@ -172,16 +172,16 @@ const PlayersRow: React.FC<ListChildComponentProps<PlayerWithTeamName[]>> = ({
         ></Input>
 
         <Input
-          placeholder="Position"
-          {...register("position")}
-          error={errors.position?.message}
-        ></Input>
-
-        <Input
           placeholder="Birth Date"
           type="date"
           {...register("dateBirth")}
           error={errors.dateBirth?.message}
+        ></Input>
+
+        <Input
+          placeholder="Position"
+          {...register("position")}
+          error={errors.position?.message}
         ></Input>
 
         <Input
